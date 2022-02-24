@@ -235,6 +235,7 @@ class ConvNet(torch.nn.Module):
         return drug_output_embedding, target_output_embedding
 
 
+# HGRL-DTA (w/o LMG)
 class FirstVariantOfConvNet(torch.nn.Module):
     def __init__(self, ag_init_dim=2339, mg_init_dim=78, pg_init_dim=54, affinity_dropout_rate=0.2, skip=False, embedding_dim=128, integration_mode="combination4"):
         super(FirstVariantOfConvNet, self).__init__()
@@ -279,6 +280,7 @@ class FirstVariantOfConvNet(torch.nn.Module):
         return drug_output_embedding, target_output_embedding
 
 
+# HGRL-DTA (w/o GAG)
 class SecondVariantOfConvNet(torch.nn.Module):
     def __init__(self, ag_init_dim=2339, mg_init_dim=78, pg_init_dim=54, affinity_dropout_rate=0.2, skip=False, embedding_dim=128, integration_mode="combination4"):
         super(SecondVariantOfConvNet, self).__init__()
@@ -307,8 +309,9 @@ class SecondVariantOfConvNet(torch.nn.Module):
         target_output_embedding = self.target_output_linear(target_graph_embedding)[-1]
 
         return drug_output_embedding, target_output_embedding
-    
-    
+
+
+# HGRL-DTA (w/o MB)
 class ThirdVariantOfConvNet(torch.nn.Module):
     def __init__(self, ag_init_dim=2339, mg_init_dim=78, pg_init_dim=54, affinity_dropout_rate=0.2, skip=False, embedding_dim=128, integration_mode="combination4"):
         super(ThirdVariantOfConvNet, self).__init__()
