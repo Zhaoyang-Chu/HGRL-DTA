@@ -110,11 +110,12 @@ def train(architecture, predictor, device, train_loader, drug_graphs_DataLoader,
     LOG_INTERVAL = 10
     loss_fn = nn.MSELoss()
     optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, chain(architecture.parameters(), predictor.parameters())), lr=LR, weight_decay=0)
+    affinity_graph.to(device)  # affinity graph
     drug_graph_batchs = list(map(lambda graph: graph.to(device), drug_graphs_DataLoader))  # drug graphs
     target_graph_batchs = list(map(lambda graph: graph.to(device), target_graphs_DataLoader))  # target graphs
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
-        drug_embedding, target_embedding = architecture(affinity_graph.to(device), drug_graph_batchs, target_graph_batchs)
+        drug_embedding, target_embedding = architecture(affinity_graph, drug_graph_batchs, target_graph_batchs)
         output, _ = predictor(data.to(device), drug_embedding, target_embedding)
         loss = loss_fn(output, data.y.view(-1, 1).float().to(device))
         loss.backward()
@@ -131,12 +132,13 @@ def predicting(architecture, predictor, device, loader, drug_graphs_DataLoader, 
     total_preds = torch.Tensor()
     total_labels = torch.Tensor()
     print('Make prediction for {} samples...'.format(len(loader.dataset)))
+    affinity_graph.to(device)  # affinity graph
     drug_graph_batchs = list(map(lambda graph: graph.to(device), drug_graphs_DataLoader))  # drug graphs
     target_graph_batchs = list(map(lambda graph: graph.to(device), target_graphs_DataLoader))  # target graphs
     with torch.no_grad():
         for data in loader:
             drug_embedding, target_embedding = architecture(
-                affinity_graph.to(device), drug_graph_batchs, target_graph_batchs, 
+                affinity_graph, drug_graph_batchs, target_graph_batchs, 
                 drug_map=drug_map, drug_map_weight=drug_map_weight, target_map=target_map, target_map_weight=target_map_weight
             )
             output, _ = predictor(data.to(device), drug_embedding, target_embedding)
@@ -148,13 +150,14 @@ def predicting(architecture, predictor, device, loader, drug_graphs_DataLoader, 
 def getLinkEmbeddings(architecture, predictor, device, loader, drug_graphs_DataLoader, target_graphs_DataLoader, affinity_graph, drug_map=None, drug_map_weight=None, target_map=None, target_map_weight=None):
     architecture.eval()
     predictor.eval()
+    affinity_graph.to(device)  # affinity graph
     drug_graph_batchs = list(map(lambda graph: graph.to(device), drug_graphs_DataLoader))  # drug graphs
     target_graph_batchs = list(map(lambda graph: graph.to(device), target_graphs_DataLoader))  # target graphs
     with torch.no_grad():
         link_embeddings_batch_list = []
         for data in loader:
             drug_embedding, target_embedding = architecture(
-                affinity_graph.to(device), drug_graph_batchs, target_graph_batchs, 
+                affinity_graph, drug_graph_batchs, target_graph_batchs, 
                 drug_map=drug_map, drug_map_weight=drug_map_weight, target_map=target_map, target_map_weight=target_map_weight
             )
             _, link_embeddings_batch = predictor(data.to(device), drug_embedding, target_embedding)
@@ -165,10 +168,11 @@ def getLinkEmbeddings(architecture, predictor, device, loader, drug_graphs_DataL
 
 def getEmbeddings(architecture, device, drug_graphs_DataLoader, target_graphs_DataLoader, affinity_graph):
     architecture.eval()
+    affinity_graph.to(device)  # affinity graph
     drug_graph_batchs = list(map(lambda graph: graph.to(device), drug_graphs_DataLoader))  # drug graphs
     target_graph_batchs = list(map(lambda graph: graph.to(device), target_graphs_DataLoader))  # target graphs
     with torch.no_grad():
-        drug_embedding, target_embedding = architecture(affinity_graph.to(device), drug_graph_batchs, target_graph_batchs)
+        drug_embedding, target_embedding = architecture(affinity_graph, drug_graph_batchs, target_graph_batchs)
     return drug_embedding.cpu().numpy(), target_embedding.cpu().numpy()
 
 
