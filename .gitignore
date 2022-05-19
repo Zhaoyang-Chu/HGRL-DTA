@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Data
+source/data/davis/aln/
+source/data/davis/pconsc4/
+source/data/kiba/aln/
+source/data/kiba/pconsc4/
