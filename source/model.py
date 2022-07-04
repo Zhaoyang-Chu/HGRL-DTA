@@ -39,15 +39,15 @@ class LinearBlock(torch.nn.Module):
 
     def forward(self, x):
         output = x
-        emdeddings = []
+        embeddings = []
         for layer_index in range(len(self.layers)):
             output = self.layers[layer_index](output)
             if layer_index in self.relu_layers_index:
                 output = self.relu(output)
             if layer_index in self.dropout_layers_index:
                 output = self.dropout(output)
-            emdeddings.append(output)
-        return emdeddings
+            embeddings.append(output)
+        return embeddings
     
 
 class DenseGCNBlock(torch.nn.Module):
@@ -71,7 +71,7 @@ class DenseGCNBlock(torch.nn.Module):
 
     def forward(self, x, adj, supplement_x=None):
         output = x
-        emdeddings = []
+        embeddings = []
         for conv_layer_index in range(len(self.conv_layers)):
             if supplement_x is not None and conv_layer_index == 1:
                 supplement_x = torch.unsqueeze(supplement_x, 0)
@@ -81,8 +81,8 @@ class DenseGCNBlock(torch.nn.Module):
                 output = self.relu(output)
             if conv_layer_index in self.dropout_layers_index:
                 output = self.dropout(output)
-            emdeddings.append(torch.squeeze(output, dim=0))
-        return emdeddings
+            embeddings.append(torch.squeeze(output, dim=0))
+        return embeddings
     
 
 class GCNBlock(torch.nn.Module):
@@ -106,7 +106,7 @@ class GCNBlock(torch.nn.Module):
 
     def forward(self, x, edge_index, edge_weight, batch, supplement_x=None):
         output = x
-        emdeddings = []
+        embeddings = []
         for conv_layer_index in range(len(self.conv_layers)):
             if supplement_x is not None and conv_layer_index == 1:
                 output = self.supplement_func(output, supplement_x)
@@ -115,8 +115,8 @@ class GCNBlock(torch.nn.Module):
                 output = self.relu(output)
             if conv_layer_index in self.dropout_layers_index:
                 output = self.dropout(output)
-            emdeddings.append(gep(output, batch))
-        return emdeddings
+            embeddings.append(gep(output, batch))
+        return embeddings
 
 
 class DenseGCNModel(torch.nn.Module):
