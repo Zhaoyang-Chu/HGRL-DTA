@@ -6,13 +6,13 @@ This repository contains a PyTorch implementation of the paper "Hierarchical Gra
 ## Overview of Source Codes
 - `materials/` contains raw materials of the Davis dataset and the KIBA dataset.
 - `data/` contains the input data of our model.
-- `metrics.py`: contains the evaluation metrics used in our experiments (i.e., MSE, CI, $r_m^2$, Pearson and AUPR).
-- `GraphInput.py`: contains the construction processes of the affinity graph, the drug molecular graph and the target molecular graph.
+- `metrics.py`: contains the evaluation metrics used in our experiments (i.e., MSE, CI, $r_m^2$, Pearson, and AUPR).
+- `GraphInput.py`: contains the construction processes of the affinity graph, the drug molecule graph and the target molecule graph.
 - `model.py`: contains our HGRL-DTA model and its variants.
-- `train_test_S1.py`: contains the training and testing processes under setting S1.
-- `train_test_S2.py`: contains the training and testing processes under setting S2.
-- `train_test_S3.py`: contains the training and testing processes under setting S3.
-- `train_test_S4.py`: contains the training and testing processes under setting S4.
+- `train_test_S1.py`: contains the training and testing processes under the **S1** setting.
+- `train_test_S2.py`: contains the training and testing processes under the **S2** setting.
+- `train_test_S3.py`: contains the training and testing processes under the **S3** setting.
+- `train_test_S4.py`: contains the training and testing processes under the **S4** setting.
 - `utils.py`: contains utility functions.
 
 ## Dependencies
@@ -28,7 +28,7 @@ This repository contains a PyTorch implementation of the paper "Hierarchical Gra
 ## Runing
 
 ### Data Preparation
-Prepare target molecular graphs, please refer to [Prepare Target Molecular Graphs](https://github.com/Zhaoyang-Chu/HGRL-DTA/tree/main/source/data#2-prepare-for-target-molecular-graphs).
+Prepare target molecule graphs, please refer to [Prepare Target Molecule Graphs](https://github.com/Zhaoyang-Chu/HGRL-DTA/tree/main/source/data#2-prepare-for-target-molecule-graphs).
 
 ### Setting S1
 
@@ -55,11 +55,11 @@ Cross validation under other experimental settings is similar.
 
 #### Ablation Study
 Ablation study on the Davis dataset:
-- HGRL-DTA (w/o GAG):
+- HGRL-DTA (w/o CAG):
     ```shell
     python train_test_S1.py --dataset davis --cuda_id 0 --num_epochs 2000 --batch_size 512 --lr 0.0005 --model 2 --dropedge_rate 0.2
     ```
-- HGRL-DTA (w/o LMG):
+- HGRL-DTA (w/o FMG):
     ```shell
     python train_test_S1.py --dataset davis --cuda_id 0 --num_epochs 2000 --batch_size 512 --lr 0.0005 --model 1 --dropedge_rate 0.2
     ```
@@ -67,7 +67,7 @@ Ablation study on the Davis dataset:
     ```shell
     python train_test_S1.py --dataset davis --cuda_id 0 --num_epochs 2000 --batch_size 512 --lr 0.0005 --model 0 --weighted --dropedge_rate 0.2
     ```
-- HGRL-DTA (w/o MB):
+- HGRL-DTA-L:
     ```shell
     python train_test_S1.py --dataset davis --cuda_id 0 --num_epochs 2000 --batch_size 512 --lr 0.0005 --model 3 --dropedge_rate 0.2
     ```
