@@ -22,6 +22,7 @@ def argparser():
     parser.add_argument('--target_sim_k', type=int, help='Similarity topk of target', default=7)
     parser.add_argument('--drug_aff_k', type=int, help='Affinity topk of drug', default=40)
     parser.add_argument('--target_aff_k', type=int, help='Affinity topk of target', default=150)  # target_aff_k = 90, when conducting the S2 and S4 experiments on the KIBA dataset
+    parser.add_argument('--skip', help='Whether the skip connection operation is used', action='store_true')
     FLAGS, unparsed = parser.parse_known_args()
 
     return FLAGS

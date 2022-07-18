@@ -87,7 +87,7 @@ def train_test():
     target_graphs_DataLoader = torch.utils.data.DataLoader(target_graphs_Data, shuffle=False, collate_fn=collate, batch_size=affinity_graph.num_node2s)  # if memory is not enough, turn down the batch_size, e.g., batch_size=100
 
     device = torch.device(cuda_name if torch.cuda.is_available() else 'cpu')
-    architecture = Architecture(ag_init_dim=affinity_graph.num_node1s + affinity_graph.num_node2s + 2, affinity_dropout_rate=FLAGS.dropedge_rate)
+    architecture = Architecture(ag_init_dim=affinity_graph.num_node1s + affinity_graph.num_node2s + 2, affinity_dropout_rate=FLAGS.dropedge_rate, skip=FLAGS.skip)
     architecture.to(device)
 
     predictor = Predictor(embedding_dim=architecture.output_dim)
