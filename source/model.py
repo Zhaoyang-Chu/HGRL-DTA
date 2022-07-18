@@ -39,7 +39,7 @@ class LinearBlock(torch.nn.Module):
 
     def forward(self, x):
         output = x
-        embeddings = []
+        embeddings = [x]
         for layer_index in range(len(self.layers)):
             output = self.layers[layer_index](output)
             if layer_index in self.relu_layers_index:
@@ -71,7 +71,7 @@ class DenseGCNBlock(torch.nn.Module):
 
     def forward(self, x, adj, supplement_x=None):
         output = x
-        embeddings = []
+        embeddings = [x]
         for conv_layer_index in range(len(self.conv_layers)):
             if supplement_x is not None and conv_layer_index == 1:
                 supplement_x = torch.unsqueeze(supplement_x, 0)
@@ -106,7 +106,7 @@ class GCNBlock(torch.nn.Module):
 
     def forward(self, x, edge_index, edge_weight, batch, supplement_x=None):
         output = x
-        embeddings = []
+        embeddings = [x]
         for conv_layer_index in range(len(self.conv_layers)):
             if supplement_x is not None and conv_layer_index == 1:
                 output = self.supplement_func(output, supplement_x)
@@ -128,8 +128,8 @@ class DenseGCNModel(torch.nn.Module):
         self.num_layers = len(layers_dim) - 1
         self.graph_conv = DenseGCNBlock(layers_dim, 0.1, relu_layers_index=range(self.num_layers), dropout_layers_index=range(self.num_layers), supplement_mode=supplement_mode)
 
-    def forward(self, graph, supplement_x=None):
-        xs, adj, num_node1s, num_node2s = graph.x, graph.adj, graph.num_node1s, graph.num_node2s
+    def forward(self, graph, substitution_x=None, supplement_x=None):
+        xs, adj, num_node1s, num_node2s = (substitution_x if substitution_x is not None else graph.x), graph.adj, graph.num_node1s, graph.num_node2s
         indexs = torch.where(adj != 0)
         edge_indexs = torch.cat((torch.unsqueeze(indexs[0], 0), torch.unsqueeze(indexs[1], 0)), 0)
         edge_indexs_dropout, edge_weights_dropout = dropout_adj(edge_index=edge_indexs, edge_attr=adj[indexs], p=self.edge_dropout_rate, force_undirected=True, num_nodes=num_node1s + num_node2s, training=self.training)
@@ -161,7 +161,7 @@ class GCNModel(torch.nn.Module):
             embedding_batchs = list(map(lambda graph: self.graph_conv(graph.x, graph.edge_index, None, graph.batch), graph_batchs))
 
         embeddings = []
-        for i in range(self.num_layers):
+        for i in range(self.num_layers + 1):
             embeddings.append(torch.cat(list(map(lambda embedding_batch: embedding_batch[i], embedding_batchs)), 0))
 
         return embeddings
@@ -235,7 +235,7 @@ class ConvNet(torch.nn.Module):
         return drug_output_embedding, target_output_embedding
 
 
-# HGRL-DTA (w/o LMG)
+# HGRL-DTA (w/o FMG)
 class FirstVariantOfConvNet(torch.nn.Module):
     def __init__(self, ag_init_dim=2339, mg_init_dim=78, pg_init_dim=54, affinity_dropout_rate=0.2, skip=False, embedding_dim=128, integration_mode="combination4"):
         super(FirstVariantOfConvNet, self).__init__()
@@ -280,7 +280,7 @@ class FirstVariantOfConvNet(torch.nn.Module):
         return drug_output_embedding, target_output_embedding
 
 
-# HGRL-DTA (w/o GAG)
+# HGRL-DTA (w/o CAG)
 class SecondVariantOfConvNet(torch.nn.Module):
     def __init__(self, ag_init_dim=2339, mg_init_dim=78, pg_init_dim=54, affinity_dropout_rate=0.2, skip=False, embedding_dim=128, integration_mode="combination4"):
         super(SecondVariantOfConvNet, self).__init__()
@@ -311,7 +311,7 @@ class SecondVariantOfConvNet(torch.nn.Module):
         return drug_output_embedding, target_output_embedding
 
 
-# HGRL-DTA (w/o MB)
+# HGRL-DTA-L
 class ThirdVariantOfConvNet(torch.nn.Module):
     def __init__(self, ag_init_dim=2339, mg_init_dim=78, pg_init_dim=54, affinity_dropout_rate=0.2, skip=False, embedding_dim=128, integration_mode="combination4"):
         super(ThirdVariantOfConvNet, self).__init__()
