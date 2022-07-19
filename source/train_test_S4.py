@@ -15,7 +15,7 @@ def create_dataset_for_train_test(affinity, dataset, weighted, drug_aff_k, targe
     drug_train_fold_origin = json.load(open(dataset_path + 'S2_train_set.txt'))
     drug_train_folds = []
     for i in range(len(drug_train_fold_origin)):
-            drug_train_folds += drug_train_fold_origin[i]
+        drug_train_folds += drug_train_fold_origin[i]
     drug_test_fold = json.load(open(dataset_path + 'S2_test_set.txt'))
     drug_mask_fold = json.load(open(dataset_path + 'S2_mask_set.txt'))
     
