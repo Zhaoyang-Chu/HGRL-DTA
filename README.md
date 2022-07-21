@@ -76,11 +76,11 @@ Ablation study on the KIBA dataset is similar.
 ### Setting S2
 - Train and test our model on the Davis dataset:
     ```shell
-    python train_test_S2.py --dataset davis --cuda_id 0 --num_epochs 200 --batch_size 512 --lr 0.0005 --model 0 --dropedge_rate 0.2 --drug_smi_k 2 --skip
+    python train_test_S2.py --dataset davis --cuda_id 0 --num_epochs 200 --batch_size 512 --lr 0.0005 --model 0 --dropedge_rate 0.2 --drug_sim_k 2 --skip
     ```
 - Train and test our model on the KIBA dataset:
     ```shell
-    python train_test_S2.py --dataset kiba --cuda_id 0 --num_epochs 200 --batch_size 512 --lr 0.0005 --model 0 --dropedge_rate 0.2 --drug_aff_k 40 --target_aff_k 90 --drug_smi_k 2 --skip
+    python train_test_S2.py --dataset kiba --cuda_id 0 --num_epochs 200 --batch_size 512 --lr 0.0005 --model 0 --dropedge_rate 0.2 --drug_aff_k 40 --target_aff_k 90 --drug_sim_k 2 --skip
     ```
 To prevent over-fitting, the same setting (i.e, 200 epochs, 512 batch size and 0.0005 learning rate) is used when runing other compared methods.
 
@@ -98,10 +98,10 @@ To prevent over-fitting, the same setting (i.e, 200 epochs, 512 batch size and 0
 ### Setting S4
 - Train and test our model on the Davis dataset:
     ```shell
-    python train_test_S4.py --dataset davis --cuda_id 0 --num_epochs 200 --batch_size 512 --lr 0.0005 --model 0 --dropedge_rate 0.2 --drug_smi_k 2 --target_sim_k 7 --skip
+    python train_test_S4.py --dataset davis --cuda_id 0 --num_epochs 200 --batch_size 512 --lr 0.0005 --model 0 --dropedge_rate 0.2 --drug_sim_k 2 --target_sim_k 7 --skip
     ```
 - Train and test our model on the KIBA dataset:
     ```shell
-    python train_test_S4.py --dataset kiba --cuda_id 0 --num_epochs 200 --batch_size 512 --lr 0.0005 --model 0 --dropedge_rate 0.2 --drug_aff_k 40 --target_aff_k 90 --drug_smi_k 2 --target_sim_k 7 --skip
+    python train_test_S4.py --dataset kiba --cuda_id 0 --num_epochs 200 --batch_size 512 --lr 0.0005 --model 0 --dropedge_rate 0.2 --drug_aff_k 40 --target_aff_k 90 --drug_sim_k 2 --target_sim_k 7 --skip
     ```
 To prevent over-fitting, the same setting (i.e, 200 epochs, 512 batch size and 0.0005 learning rate) is used when runing other compared methods.
